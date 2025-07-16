@@ -1,0 +1,20 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Categoría: {{ categoria.nombre }}{% endblock %}
+
+{% block contenido %}
+<h2>Artículos en {{ categoria.nombre }}</h2>
+
+{% for articulo in articulos %}
+    <div style="margin-bottom: 25px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
+        <h3><a href="{% url 'detalle_articulo' articulo.id %}">{{ articulo.titulo }}</a></h3>
+        <p><strong>{{ articulo.fecha_publicacion|date:"d/m/Y H:i" }}</strong> - por {{ articulo.autor.username }}</p>
+        <p>{{ articulo.contenido|truncatewords:30 }}</p>
+        <a href="{% url 'detalle_articulo' articulo.id %}">Leer más...</a>
+    </div>
+{% empty %}
+    <p>No hay artículos en esta categoría.</p>
+{% endfor %}
+
+<a href="{% url 'inicio' %}">← Volver al inicio</a>
+{% endblock %}

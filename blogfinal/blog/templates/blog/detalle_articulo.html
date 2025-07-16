@@ -1,0 +1,43 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ articulo.titulo }} - Mi Blog{% endblock %}
+
+{% block contenido %}
+<h2>{{ articulo.titulo }}</h2>
+<p class="fecha">Publicado el {{ articulo.fecha_publicacion|date:"d/m/Y H:i" }} por {{ articulo.autor.username }}</p>
+<hr>
+<p>{{ articulo.contenido }}</p>
+
+<hr>
+<h3>Comentarios</h3>
+{% for comentario in comentarios %}
+    <div style="margin-bottom: 10px; padding: 10px; background-color: #f0f0f0;">
+        <p><strong>{{ comentario.autor.username }}</strong> - {{ comentario.fecha|date:"d/m/Y H:i" }}</p>
+        <p>{{ comentario.contenido }}</p>
+
+        {% if user == comentario.autor %}
+            <p>
+                <a href="{% url 'editar_comentario' comentario.id %}">✏️ Editar</a> |
+                <a href="{% url 'eliminar_comentario' comentario.id %}">🗑️ Eliminar</a>
+            </p>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>Aún no hay comentarios.</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+    <hr>
+    <h4>Agregar comentario:</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Comentar</button>
+    </form>
+{% else %}
+    <p><a href="{% url 'login' %}">Iniciá sesión</a> para comentar.</p>
+{% endif %}
+
+<br>
+<a href="{% url 'inicio' %}">← Volver al inicio</a>
+{% endblock %}

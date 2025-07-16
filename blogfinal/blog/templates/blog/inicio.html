@@ -1,0 +1,28 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Inicio - Mi Blog{% endblock %}
+
+{% block contenido %}
+<h2>Artículos recientes</h2>
+
+<form method="get" style="margin-bottom: 20px;">
+    <label for="orden">Ordenar por:</label>
+    <select name="orden" id="orden" onchange="this.form.submit()">
+        <option value="fecha_desc" {% if request.GET.orden == 'fecha_desc' %}selected{% endif %}>Fecha (más recientes)</option>
+        <option value="fecha_asc" {% if request.GET.orden == 'fecha_asc' %}selected{% endif %}>Fecha (más antiguos)</option>
+        <option value="titulo_asc" {% if request.GET.orden == 'titulo_asc' %}selected{% endif %}>Título (A-Z)</option>
+        <option value="titulo_desc" {% if request.GET.orden == 'titulo_desc' %}selected{% endif %}>Título (Z-A)</option>
+    </select>
+</form>
+
+{% for articulo in articulos %}
+    <div style="margin-bottom: 25px; padding-bottom: 10px; border-bottom: 1px solid #ccc;">
+        <h3><a href="{% url 'detalle_articulo' articulo.id %}">{{ articulo.titulo }}</a></h3>
+        <p><strong>{{ articulo.fecha_publicacion|date:"d/m/Y H:i" }}</strong> - por {{ articulo.autor.username }}</p>
+        <p>{{ articulo.contenido|truncatewords:30 }}</p>
+        <a href="{% url 'detalle_articulo' articulo.id %}">Leer más...</a>
+    </div>
+{% empty %}
+    <p>No hay artículos aún.</p>
+{% endfor %}
+{% endblock %}

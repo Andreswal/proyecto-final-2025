@@ -1,0 +1,10 @@
+link: http://127.0.0.1:8001/admin/
+usuario admin: admin
+cont: admin
+
+link: http://127.0.0.1:8001/
+usuario: usuario1
+cont: S.7cFwsspxi5z7d
+
+usuario: usuario2
+cont: K.wXy2@3CzUTJSP
