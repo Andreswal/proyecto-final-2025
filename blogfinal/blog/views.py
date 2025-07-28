@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from .models import Articulo
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Articulo, Comentario, Like
 
 def inicio(request):
     orden = request.GET.get('orden', 'fecha_desc')
@@ -32,8 +34,16 @@ def articulos_por_categoria(request, categoria_id):
         'articulos': articulos
     })
 def detalle_articulo(request, articulo_id):
-    articulo = Articulo.objects.get(id=articulo_id)
-    return render(request, 'blog/detalle_articulo.html', {'articulo': articulo})
+    articulo = get_object_or_404(Articulo, id=articulo_id)
+    dio_like = False
+    if request.user.is_authenticated:
+        dio_like = Like.objects.filter(usuario=request.user, articulo=articulo).exists()
+    total_likes = Like.objects.filter(articulo=articulo).count()
+    return render(request, 'blog/detalle_articulo.html', {
+        'articulo': articulo,
+        'dio_like': dio_like,
+        'total_likes': total_likes
+    })
 
 def acerca_de(request):
     return render(request, 'blog/acerca_de.html')
@@ -115,3 +125,15 @@ def articulos_por_categoria(request, categoria_id):
         'categoria': categoria,
         'articulos': articulos
     })
+
+@login_required
+def toggle_like(request, articulo_id):
+    articulo = get_object_or_404(Articulo, id=articulo_id)
+    like_existente = Like.objects.filter(usuario=request.user, articulo=articulo)
+
+    if like_existente.exists():
+        like_existente.delete()
+    else:
+        Like.objects.create(usuario=request.user, articulo=articulo)
+
+    return redirect('detalle_articulo', articulo_id=articulo.id)

@@ -23,6 +23,13 @@ class Articulo(models.Model):
     def __str__(self):
         return self.titulo
 
+class Like(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    articulo = models.ForeignKey(Articulo, on_delete=models.CASCADE)
+    fecha = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('usuario', 'articulo')  # Solo 1 like por usuario por artículo
     
     from django.contrib.auth.models import User
 

@@ -7,6 +7,20 @@
 <p class="fecha">Publicado el {{ articulo.fecha_publicacion|date:"d/m/Y H:i" }} por {{ articulo.autor.username }}</p>
 <hr>
 <p>{{ articulo.contenido }}</p>
+<form method="post" action="{% url 'toggle_like' articulo.id %}">
+  {% csrf_token %}
+  {% if user.is_authenticated %}
+    {% if dio_like %}
+      <button type="submit" class="btn btn-danger">👎 Quitar Me gusta</button>
+    {% else %}
+      <button type="submit" class="btn btn-primary">👍 Me gusta</button>
+    {% endif %}
+  {% else %}
+    <a href="{% url 'login' %}" class="btn btn-outline-secondary">Iniciar sesión para dar Me gusta</a>
+  {% endif %}
+</form>
+
+<p>Total de likes: {{ total_likes }}</p>
 
 <hr>
 <h3>Comentarios</h3>
