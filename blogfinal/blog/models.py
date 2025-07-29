@@ -16,6 +16,7 @@ class Categoria(models.Model):
 class Articulo(models.Model):
     titulo = models.CharField(max_length=200)
     contenido = models.TextField()
+    imagen = models.ImageField(upload_to='articulos/', blank=True, null=True)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
     autor = models.ForeignKey(User, on_delete=models.CASCADE)
     categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True)

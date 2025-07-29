@@ -7,6 +7,12 @@
 <p class="fecha">Publicado el {{ articulo.fecha_publicacion|date:"d/m/Y H:i" }} por {{ articulo.autor.username }}</p>
 <hr>
 <p>{{ articulo.contenido }}</p>
+
+{% if articulo.imagen %}
+  <img src="{{ articulo.imagen.url }}" alt="{{ articulo.titulo }}" class="img-fluid mb-3">
+{% endif %}
+
+
 <form method="post" action="{% url 'toggle_like' articulo.id %}">
   {% csrf_token %}
   {% if user.is_authenticated %}

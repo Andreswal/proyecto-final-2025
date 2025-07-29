@@ -17,3 +17,10 @@ urlpatterns = [
     path('articulo/<int:articulo_id>/toggle_like/', views.toggle_like, name='toggle_like'),
 
 ]
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+urlpatterns = [
+    # tus URLs normales
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
