@@ -5,7 +5,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 from .models import Articulo, Categoria, Comentario, Like
-from .forms import ComentarioForm
+from .forms import ArticuloForm, ComentarioForm
 
 from django.contrib.auth.decorators import login_required
 
@@ -156,6 +156,17 @@ def articulos_por_categoria(request, categoria_id):
         'articulos': articulos
     })
 
+def crear_articulo(request):
+    if request.method == 'POST':
+        form = ArticuloForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_articulos')
+    else:
+        form = ArticuloForm()
+    return render(request, 'blog/crear_articulo.html', {'form': form})
+
+
 @login_required
 def toggle_like(request, articulo_id):
     articulo = get_object_or_404(Articulo, id=articulo_id)
@@ -167,3 +178,4 @@ def toggle_like(request, articulo_id):
         Like.objects.create(usuario=request.user, articulo=articulo)
 
     return redirect('detalle_articulo', articulo_id=articulo.id)
+    

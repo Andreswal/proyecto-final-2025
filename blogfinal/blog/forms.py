@@ -16,3 +16,8 @@ class ComentarioForm(forms.ModelForm):
         labels = {
             'contenido': ''
         }
+
+class ArticuloForm(forms.ModelForm):
+    class Meta:
+        model = Articulo
+        fields = ['titulo', 'contenido', 'imagen_principal','imagen_intermedia', 'categoria']

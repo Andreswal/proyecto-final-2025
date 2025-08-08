@@ -8,10 +8,17 @@ class Categoria(models.Model):
     def __str__(self):
         return self.nombre
 
+def ruta_imagen_articulo(instance, filename):
+    return f'publicaciones/articulo_{instance.id}/principal{filename}'
+
+def ruta_imagen_articulo(instance, filename):
+    return f'publicaciones/articulo_{instance.id}/intermedia{filename}'
+
 class Articulo(models.Model):
     titulo = models.CharField(max_length=200)
     contenido = models.TextField()
-    imagen = models.ImageField(upload_to='articulos/', blank=True, null=True)
+    imagen_principal = models.ImageField(upload_to=ruta_imagen_articulo, blank=True, null=True)
+    imagen_intermedia = models.ImageField(upload_to=ruta_imagen_articulo, blank=True, null=True)
     fecha_publicacion = models.DateTimeField(auto_now_add=True)
     autor = models.ForeignKey(User, on_delete=models.CASCADE)
     categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True)

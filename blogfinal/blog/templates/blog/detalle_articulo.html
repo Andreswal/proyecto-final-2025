@@ -3,22 +3,23 @@
 {% block title %}{{ articulo.titulo }} - Mi Blog{% endblock %}
 
 {% block contenido %}
+<div class="articulo">
 <h2>{{ articulo.titulo }}</h2>
 <p class="fecha">Publicado el {{ articulo.fecha_publicacion|date:"d/m/Y H:i" }} por {{ articulo.autor.username }}</p>
 <hr>
 
 {% if articulo.imagen_principal %}
-
   <img src="{{ articulo.imagen_principal.url }}" alt="Imagen principal" class="img-fluid mb-3">
 {% endif %}
 
-<p>{{ articulo.contenido|linebreaks|slice:":500" }}</p>
+<p>{{ articulo.contenido|linebreaks }}</p>
 
 {% if articulo.imagen_intermedia %}
-  <img src="{{ articulo.imagen_intermedia.url }}" class="img-fluid my-4" alt="Imagen intermedia">
+  <img src="{{ articulo.imagen_intermedia.url }}"  alt="Imagen intermedia" class="img-fluid my-4">
 {% endif %}
 
-<p>{{ articulo.contenido|linebreaks|slice:":500" }}</p>
+<p>{{ articulo.contenido|linebreaks }}</p>
+</div>
 
 <form method="post" action="{% url 'toggle_like' articulo.id %}">
   {% csrf_token %}

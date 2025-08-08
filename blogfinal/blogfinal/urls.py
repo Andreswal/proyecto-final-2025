@@ -21,4 +21,3 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),  # Esta línea incluye las URLs de la app blog
 ]
-

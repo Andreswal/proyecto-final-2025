@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.inicio, name='inicio'),
@@ -16,11 +18,4 @@ urlpatterns = [
     path('categoria/<int:categoria_id>/', views.articulos_por_categoria, name='articulos_por_categoria'),
     path('articulo/<int:articulo_id>/toggle_like/', views.toggle_like, name='toggle_like'),
 
-]
-
-from django.conf import settings
-from django.conf.urls.static import static
-
-urlpatterns = [
-    # tus URLs normales
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
