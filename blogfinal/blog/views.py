@@ -1,7 +1,14 @@
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseForbidden
+from django.contrib import messages
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
+from .models import Articulo, Categoria, Comentario, Like
+from .forms import ComentarioForm
+
 from django.contrib.auth.decorators import login_required
-from .models import Articulo, Comentario, Like
+
 
 def inicio(request):
     orden = request.GET.get('orden', 'fecha_desc')
@@ -33,17 +40,40 @@ def articulos_por_categoria(request, categoria_id):
         'categoria': categoria,
         'articulos': articulos
     })
+    
+    
 def detalle_articulo(request, articulo_id):
     articulo = get_object_or_404(Articulo, id=articulo_id)
     dio_like = False
+    comentarios = Comentario.objects.filter(articulo=articulo).order_by('-fecha')
+
     if request.user.is_authenticated:
         dio_like = Like.objects.filter(usuario=request.user, articulo=articulo).exists()
+
     total_likes = Like.objects.filter(articulo=articulo).count()
+
+    # Manejo del comentario
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden("Debés iniciar sesión para comentar.")
+        form = ComentarioForm(request.POST)
+        if form.is_valid():
+            nuevo_comentario = form.save(commit=False)
+            nuevo_comentario.articulo = articulo
+            nuevo_comentario.autor = request.user
+            nuevo_comentario.save()
+            return redirect('detalle_articulo', articulo_id=articulo.id)
+    else:
+        form = ComentarioForm()
+
     return render(request, 'blog/detalle_articulo.html', {
         'articulo': articulo,
+        'comentarios': comentarios,
+        'form': form,
         'dio_like': dio_like,
         'total_likes': total_likes
     })
+
 
 def acerca_de(request):
     return render(request, 'blog/acerca_de.html')

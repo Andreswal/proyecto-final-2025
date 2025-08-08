@@ -6,12 +6,19 @@
 <h2>{{ articulo.titulo }}</h2>
 <p class="fecha">Publicado el {{ articulo.fecha_publicacion|date:"d/m/Y H:i" }} por {{ articulo.autor.username }}</p>
 <hr>
-<p>{{ articulo.contenido }}</p>
 
-{% if articulo.imagen %}
-  <img src="{{ articulo.imagen.url }}" alt="{{ articulo.titulo }}" class="img-fluid mb-3">
+{% if articulo.imagen_principal %}
+
+  <img src="{{ articulo.imagen_principal.url }}" alt="Imagen principal" class="img-fluid mb-3">
 {% endif %}
 
+<p>{{ articulo.contenido|linebreaks|slice:":500" }}</p>
+
+{% if articulo.imagen_intermedia %}
+  <img src="{{ articulo.imagen_intermedia.url }}" class="img-fluid my-4" alt="Imagen intermedia">
+{% endif %}
+
+<p>{{ articulo.contenido|linebreaks|slice:":500" }}</p>
 
 <form method="post" action="{% url 'toggle_like' articulo.id %}">
   {% csrf_token %}
