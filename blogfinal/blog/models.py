@@ -44,3 +44,6 @@ class Comentario(models.Model):
 
     def __str__(self):
         return f"{self.autor.username} - {self.articulo.titulo}"
+    
+
+        

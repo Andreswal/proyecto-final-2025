@@ -3,8 +3,12 @@
 {% block title %}Inicio - Mi Blog{% endblock %}
 
 {% block contenido %}
-<h2>Artículos recientes</h2>
 
+
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center"></div>
+    <div class="col-md-10 col-lg-8 col-xl-7">
+        <h2>Artículos recientes</h2>
 <form method="get" style="margin-bottom: 20px;">
     <label for="orden">Ordenar por:</label>
     <select name="orden" id="orden" onchange="this.form.submit()">
@@ -14,15 +18,24 @@
         <option value="titulo_desc" {% if request.GET.orden == 'titulo_desc' %}selected{% endif %}>Título (Z-A)</option>
     </select>
 </form>
+    </div>
+</div>
+</div>
 
 {% for articulo in articulos %}
-    <div style="margin-bottom: 25px; padding-bottom: 10px; border-bottom: 1px solid #ccc;">
-        <h3><a href="{% url 'detalle_articulo' articulo.id %}">{{ articulo.titulo }}</a></h3>
-        <p><strong>{{ articulo.fecha_publicacion|date:"d/m/Y H:i" }}</strong> - por {{ articulo.autor.username }}</p>
-        <p>{{ articulo.contenido|truncatewords:30 }}</p>
-        <a href="{% url 'detalle_articulo' articulo.id %}">Leer más...</a>
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            <h3 class="post-title"><a href="{% url 'detalle_articulo' articulo.id %}">{{ articulo.titulo }}</a></h3>
+            <p class="post-meta"><strong>{{ articulo.fecha_publicacion|date:"d/m/Y H:i" }}</strong> - por {{  articulo.autor.username }}</p>
+            <p class="post-subtitle">{{ articulo.contenido|truncatewords:30 }}</p>
+            <a href="{% url 'detalle_articulo' articulo.id %}">Leer más...</a>
+
+            <hr class="my-4" />
+        </div>
     </div>
+</div>
 {% empty %}
-    <p>No hay artículos aún.</p>
+<p>No hay artículos aún.</p>
 {% endfor %}
 {% endblock %}
