@@ -3,6 +3,8 @@ from django.http import HttpResponseForbidden
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.urls import path
+from django.contrib.auth.decorators import login_required
 
 from .models import Articulo, Categoria, Comentario, Like
 from .forms import ArticuloForm, ComentarioForm
@@ -178,4 +180,37 @@ def toggle_like(request, articulo_id):
         Like.objects.create(usuario=request.user, articulo=articulo)
 
     return redirect('detalle_articulo', articulo_id=articulo.id)
+
+# Editar un artículo
+@login_required
+def editar_articulo(request, articulo_id):
+    articulo = get_object_or_404(Articulo, id=articulo_id)
+
+    if request.user != articulo.autor and not request.user.is_staff:
+        return HttpResponseForbidden("No tenés permiso para editar este artículo.")
+
+    if request.method == 'POST':
+        form = ArticuloForm(request.POST, request.FILES, instance=articulo)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Artículo editado con éxito.")
+            return redirect('detalle_articulo', articulo_id=articulo.id)
+    else:
+        form = ArticuloForm(instance=articulo)
+
+    return render(request, 'blog/editar_articulo.html', {'form': form, 'articulo': articulo})
+@login_required
+def eliminar_articulo(request, articulo_id):
+    articulo = get_object_or_404(Articulo, id=articulo_id)
+
+    if request.user != articulo.autor and not request.user.is_staff:
+        return HttpResponseForbidden("No tenés permiso para eliminar este artículo.")
+
+    if request.method == 'POST':
+        articulo.delete()
+        messages.success(request, "Artículo eliminado con éxito.")
+        return redirect('inicio')
+
+    return render(request, 'blog/eliminar_articulo.html', {'articulo': articulo})
+
     

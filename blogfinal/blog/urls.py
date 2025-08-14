@@ -18,5 +18,7 @@ urlpatterns = [
     path('categoria/<int:categoria_id>/', views.articulos_por_categoria, name='articulos_por_categoria'),
     path('articulo/<int:articulo_id>/toggle_like/', views.toggle_like, name='toggle_like'),
     path('articulo/nuevo/', views.crear_articulo, name='crear_articulo'),
+    path('articulo/<int:articulo_id>/editar/', views.editar_articulo, name='editar_articulo'),
+    path('articulo/<int:articulo_id>/eliminar/', views.eliminar_articulo, name='eliminar_articulo'),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
