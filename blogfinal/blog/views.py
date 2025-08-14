@@ -162,8 +162,11 @@ def crear_articulo(request):
     if request.method == 'POST':
         form = ArticuloForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('lista_articulos')
+            articulo = form.save(commit=False)
+            articulo.autor = request.user  # ← asignar el autor
+            articulo.save()
+            messages.success(request, "Artículo creado con éxito.")
+            return redirect('detalle_articulo', articulo_id=articulo.id)
     else:
         form = ArticuloForm()
     return render(request, 'blog/crear_articulo.html', {'form': form})
